@@ -80,9 +80,12 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <header className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-slate-800 mb-2 tracking-tight">
-            LOTRY
-          </h1>
+          <h1
+              onClick={() => window.location.reload()}
+              className="text-5xl font-bold text-slate-800 mb-2 tracking-tight cursor-pointer hover:text-blue-600 transition-colors"
+            >
+              LOTRY
+            </h1>
           <p className="text-xl text-slate-600 mb-1">2€ la case</p>
           <p className="text-sm text-slate-500">1 case gagnante par grille</p>
         </header>
