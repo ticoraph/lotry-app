@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getTursoClient } from '@/lib/turso';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const client = getTursoClient();
@@ -17,7 +20,13 @@ export async function GET() {
       ORDER BY boxes.number
     `);
 
-    return NextResponse.json({ boxes: result.rows });
+    return NextResponse.json({ boxes: result.rows }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      }
+    });
   } catch (error) {
     console.error('Erreur:', error);
     return NextResponse.json(

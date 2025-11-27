@@ -23,7 +23,12 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Base de données réinitialisée avec succès'
+      message: 'Base de données réinitialisée avec succès',
+      timestamp: Date.now()
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      }
     });
 
   } catch (error) {
