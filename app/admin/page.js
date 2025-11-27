@@ -8,13 +8,31 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [boxes, setBoxes] = useState([]);
   const router = useRouter();
+
+  // Charger les cases quand authentifié
+  const loadBoxes = async () => {
+    try {
+      const res = await fetch('/api/boxes', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        }
+      });
+      const data = await res.json();
+      setBoxes(data.boxes);
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
+  };
 
   const handleLogin = () => {
     // Vérification simple côté client (le vrai check est côté serveur)
     if (password.trim()) {
       setIsAuthenticated(true);
       setMessage({ type: '', text: '' });
+      loadBoxes();
     } else {
       setMessage({ type: 'error', text: 'Veuillez entrer un mot de passe' });
     }
@@ -39,6 +57,7 @@ export default function AdminPage() {
 
       if (res.ok) {
         setMessage({ type: 'success', text: data.message });
+        await loadBoxes();
         setTimeout(() => {
           router.push('/');
         }, 2000);
@@ -141,6 +160,42 @@ export default function AdminPage() {
           )}
 
           <div className="space-y-6">
+            {/* Grille des cases avec infos complètes */}
+            <div className="bg-slate-50 rounded-lg p-6">
+              <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span>📊</span>
+                État de la grille
+              </h3>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 mb-4">
+                {boxes.map((box) => (
+                  <div
+                    key={box.number}
+                    className={`
+                      aspect-square rounded-lg border-2
+                      flex flex-col items-center justify-center p-2
+                      ${box.reserved === 1
+                        ? 'bg-slate-400 border-slate-500'
+                        : 'bg-white border-slate-300'
+                      }
+                    `}
+                  >
+                    <span className={`text-2xl font-bold ${box.reserved === 1 ? 'text-white' : 'text-slate-700'}`}>
+                      {box.number}
+                    </span>
+                    {box.reserved === 1 && (
+                      <div className="text-xs text-white text-center mt-1 leading-tight">
+                        <div className="truncate w-full font-semibold">{box.user_name}</div>
+                        <div className="truncate w-full text-[10px]">{box.user_phone}</div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="text-sm text-slate-600">
+                <strong>{boxes.filter(b => b.reserved === 1).length}</strong> case(s) réservée(s) sur <strong>12</strong>
+              </div>
+            </div>
+
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
               <div className="flex items-start gap-3 mb-4">
                 <span className="text-2xl">⚠️</span>

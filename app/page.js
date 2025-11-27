@@ -117,9 +117,8 @@ export default function Home() {
                   {box.number}
                 </span>
                 {box.reserved === 1 && (
-                  <div className="text-xs text-white text-center mt-1 leading-tight">
-                    <div className="truncate w-full">{box.user_name}</div>
-                    <div className="truncate w-full text-[10px]">{box.user_phone}</div>
+                  <div className="text-xs text-white text-center mt-1">
+                    <div className="font-semibold">RÉSERVÉE</div>
                   </div>
                 )}
               </button>
