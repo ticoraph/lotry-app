@@ -68,19 +68,8 @@ export default function Home() {
         const amount = selectedBoxes.length * 2;
         const paypalUrl = `https://www.paypal.com/paypalme/raphaelmontico/${amount}EUR`;
 
-        // Ouvrir PayPal dans une nouvelle fenêtre
-        window.open(paypalUrl, '_blank');
-
-        setMessage({
-          type: 'success',
-          text: `Réservation enregistrée ! Finalisez le paiement de ${amount}€ sur PayPal.`
-        });
-
-        // Réinitialiser le formulaire
-        setSelectedBoxes([]);
-        setName('');
-        setPhone('');
-        await loadBoxes();
+        // Redirection directe vers PayPal
+        window.location.href = paypalUrl;
       } else {
         setMessage({ type: 'error', text: data.error });
       }
